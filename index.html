@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>music box battle</title>
+<title>Music Box Battle</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -10,85 +10,34 @@
 
 <h1>music box battle</h1>
 
-<div class="inputs">
-  <input id="artist1" placeholder="artista 1">
-  <input id="artist2" placeholder="artista 2">
-  <button onclick="startGame()">começar</button>
+<div class="controls">
+
+<input id="artist1" placeholder="artista 1">
+<input id="artist2" placeholder="artista 2">
+
+<button id="start">iniciar batalha</button>
+
 </div>
 
-<div class="scoreboard">
-  <div id="score1">0</div>
-  <div id="score2">0</div>
+<div class="artists">
+
+<div class="artist">
+<img id="img1">
+<h2 id="name1">Artista 1</h2>
+<div class="score" id="score1">0</div>
+</div>
+
+<div class="artist">
+<img id="img2">
+<h2 id="name2">Artista 2</h2>
+<div class="score" id="score2">0</div>
+</div>
+
 </div>
 
 <div id="grid"></div>
 
-<script>
-
-let artist1Songs = [
-"song a1","song a2","song a3","song a4","song a5","song a6","song a7"
-]
-
-let artist2Songs = [
-"song b1","song b2","song b3","song b4","song b5","song b6","song b7"
-]
-
-let boxes = []
-
-function shuffle(array){
-  return array.sort(()=>Math.random()-0.5)
-}
-
-function startGame(){
-
-let a1 = document.getElementById("artist1").value
-let a2 = document.getElementById("artist2").value
-
-let grid = document.getElementById("grid")
-grid.innerHTML = ""
-
-boxes = shuffle([
-...artist1Songs.map(s=>({artist:1,title:s})),
-...artist2Songs.map(s=>({artist:2,title:s}))
-])
-
-boxes.forEach((song,i)=>{
-let box = document.createElement("div")
-box.className="box"
-
-box.onclick=()=>openBox(box,song)
-
-grid.appendChild(box)
-})
-
-}
-
-let score1=0
-let score2=0
-
-function openBox(box,song){
-
-if(box.classList.contains("open")) return
-
-box.classList.add("open")
-box.innerText=song.title
-
-if(song.artist==1){
-score1++
-document.getElementById("score1").innerText=score1
-}
-
-else{
-score2++
-document.getElementById("score2").innerText=score2
-}
-
-if(score1==7) alert("artista 1 venceu")
-if(score2==7) alert("artista 2 venceu")
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
-  </html>
+</html>
