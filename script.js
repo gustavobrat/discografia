@@ -1,3 +1,5 @@
+const API_KEY = "SUA_API_KEY"
+
 const grid = document.getElementById("grid")
 
 let score1 = 0
@@ -7,33 +9,26 @@ function shuffle(array){
 return array.sort(()=>Math.random()-0.5)
 }
 
-async function getArtistData(name){
+async function getArtistImage(name){
 
-let artistRes = await fetch(
-`https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(name)}&fmt=json`
+let res = await fetch(
+`https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(name)}&api_key=${API_KEY}&format=json`
 )
 
-let artistData = await artistRes.json()
+let data = await res.json()
 
-let artist = artistData.artists[0]
-
-return artist
+return data.artist.image.pop()["#text"]
 }
 
 async function getSongs(name){
 
 let res = await fetch(
-`https://musicbrainz.org/ws/2/recording?query=artist:${encodeURIComponent(name)}&limit=100&fmt=json`
+`https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${encodeURIComponent(name)}&api_key=${API_KEY}&format=json&limit=50`
 )
 
 let data = await res.json()
 
-return data.recordings.map(r=>r.title)
-}
-
-async function getImage(mbid){
-
-return `https://coverartarchive.org/artist/${mbid}/front`
+return data.toptracks.track.map(t=>t.name)
 }
 
 async function startGame(){
@@ -52,11 +47,11 @@ let a2 = document.getElementById("artist2").value
 document.getElementById("name1").innerText=a1
 document.getElementById("name2").innerText=a2
 
-let artist1 = await getArtistData(a1)
-let artist2 = await getArtistData(a2)
+let img1 = await getArtistImage(a1)
+let img2 = await getArtistImage(a2)
 
-document.getElementById("img1").src = await getImage(artist1.id)
-document.getElementById("img2").src = await getImage(artist2.id)
+document.getElementById("img1").src = img1
+document.getElementById("img2").src = img2
 
 let songs1 = shuffle(await getSongs(a1)).slice(0,7)
 let songs2 = shuffle(await getSongs(a2)).slice(0,7)
@@ -85,7 +80,7 @@ score1++
 document.getElementById("score1").innerText=score1
 
 if(score1==7){
-setTimeout(()=>alert("artista 1 venceu"),150)
+setTimeout(()=>alert(a1+" venceu"),150)
 }
 
 }
@@ -97,7 +92,7 @@ score2++
 document.getElementById("score2").innerText=score2
 
 if(score2==7){
-setTimeout(()=>alert("artista 2 venceu"),150)
+setTimeout(()=>alert(a2+" venceu"),150)
 }
 
 }
